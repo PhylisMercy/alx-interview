@@ -1,52 +1,29 @@
+#!/usr/bin/python3
+"""Program that performs prime game"""
+
+
 def isWinner(x, nums):
-    def is_prime(num):
-        if num <= 1:
-            return False
-        if num <= 3:
-            return True
-        if num % 2 == 0 or num % 3 == 0:
-            return False
-        i = 5
-        while i * i <= num:
-            if num % i == 0 or num % (i + 2) == 0:
-                return False
-            i += 6
-        return True
-
-    def calculate_primes():
-        primes = []
-        for i in range(2, 10001):
-            if is_prime(i):
-                primes.append(i)
-        return primes
-
-    def calculate_winner(n):
-        primes = calculate_primes()
-        if n < 2:
-            return "Ben"
-        if n % 2 == 0:
-            return "Maria"
-        return "Ben"
-
-    maria_wins = 0
-    ben_wins = 0
-
-    for n in nums:
-        winner = calculate_winner(n)
-        if winner == "Maria":
-            maria_wins += 1
-        elif winner == "Ben":
-            ben_wins += 1
-
-    if maria_wins > ben_wins:
-        return "Maria"
-    elif ben_wins > maria_wins:
-        return "Ben"
-    else:
+    """Function that performs prime game"""
+    if not nums or x < 1:
         return None
-
-# Example usage
-x = 3
-nums = [4, 5, 1]
-print("Winner: {}".format(isWinner(x, nums)))
-
+    n = max(nums)
+    fltr = [True for _ in range(max(n + 1, 2))]
+    for i in range(2, int(pow(n, 0.5)) + 1):
+        if not fltr[i]:
+            continue
+        for j in range(i * i, n + 1, i):
+            fltr[j] = False
+    fltr[0] = fltr[1] = False
+    c = 0
+    for i in range(len(fltr)):
+        if fltr[i]:
+            c += 1
+        fltr[i] = c
+    plyr1 = 0
+    for n in nums:
+        plyr1 += fltr[n] % 2 == 1
+    if plyr1 * 2 == len(nums):
+        return None
+    if plyr1 * 2 > len(nums):
+        return "Maria"
+    return "Ben"
